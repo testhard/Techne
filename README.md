@@ -1,2 +1,8 @@
-TECHNE
-dovrò anche scriverci qualcosa qui
+Project Techne
+
+Il progetto consiste in una bilancia alimentare disposta di un LCD a colori che mostri i passaggi della ricetta che si vuole seguire, aiutando l'utente nel pesare gli ignredienti passo passo e compiere tutti i passaggi della ricetta. Queste ricette potranno essere caricate nella bilancia dall'utente collegandola ad un pc. Inoltre tale bilancia si occuperà anche di controllare la temperatura interna dei frigoriferi, utile per applicazioni industriali, utilizzando dei dispositivi wireless comunicanti attraverso una rete radio a 433kHz.
+I moduli per il rilevmento della temperatura saranno pilotati da microcontrollers Atmega 328p, mentre la bilancia utilizzerà un STM32f405 montato su di una scheda di sviluppo apposita. 
+Per rilevare il peso verrà utilizzata una cella di carico di portata max 5Kg ed un ADC a 24bit, per la temperatura verrà utilizzato un termistore ad incapsulamento in vetro ad alta precisione (1%).
+I moduli wireless dovranno essere alimentati a batteria e la bilancia svolgerà anche una funzione di ricarica per i moduli.
+Sarà disponibile una porta di espansione sul retro della bilancia per il futuro sviluppo di nuovi moduli aggiuntivi, ad esempio delle dock di ricarica aggiuntive o un sistema di disaggio automatico.
+Il nome Techne deriva dalla mitologia greca, indica la personificazione dell'artigianato e della tecnica, è stato scelto pensando alla nostra bilancia come un fine strumento al servizio dell'arte culinaria che ancora oggi rimane il fiore all'occhiello dell'artigianato italiano. Questo oggetto è dunque da vedere come l'affinamento della tecnica al servizio degli artigiani.
