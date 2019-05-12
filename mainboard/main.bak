@@ -1,4 +1,5 @@
 EESchema Schematic File Version 4
+LIBS:main-cache
 EELAYER 29 0
 EELAYER END
 $Descr A4 11693 8268
@@ -180,17 +181,6 @@ F 3 "~" H 7500 2400 50  0001 C CNN
 	1    7500 2400
 	1    0    0    -1  
 $EndComp
-$Comp
-L Connector:Conn_01x06_Female J6
-U 1 1 5CD4DC7C
-P 8200 2350
-F 0 "J6" H 8228 2326 50  0000 L CNN
-F 1 "Conn_01x06_Female" H 8228 2235 50  0000 L CNN
-F 2 "Connector_PinSocket_2.54mm:PinSocket_1x06_P2.54mm_Vertical" H 8200 2350 50  0001 C CNN
-F 3 "~" H 8200 2350 50  0001 C CNN
-	1    8200 2350
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	6700 2400 7300 2400
 Wire Wire Line
@@ -260,17 +250,91 @@ Wire Wire Line
 Connection ~ 7600 2300
 Wire Wire Line
 	7600 2300 7750 2300
+Wire Wire Line
+	9200 3700 8900 3700
 $Comp
-L Switch:SW_MEC_5G SW1
-U 1 1 5CD67C34
-P 4400 3850
-F 0 "SW1" H 4400 4135 50  0000 C CNN
-F 1 "SW_MEC_5G" H 4400 4044 50  0000 C CNN
-F 2 "Button_Switch_THT:SW_NKK_GW12LJP" H 4400 4050 50  0001 C CNN
-F 3 "http://www.apem.com/int/index.php?controller=attachment&id_attachment=488" H 4400 4050 50  0001 C CNN
-	1    4400 3850
+L Mechanical:MountingHole H1
+U 1 1 5CDAFBAC
+P 6000 1550
+F 0 "H1" H 6100 1596 50  0000 L CNN
+F 1 "MountingHole" H 6100 1505 50  0000 L CNN
+F 2 "MountingHole:MountingHole_3mm" H 6000 1550 50  0001 C CNN
+F 3 "~" H 6000 1550 50  0001 C CNN
+	1    6000 1550
+	1    0    0    -1  
+$EndComp
+$Comp
+L Mechanical:MountingHole H2
+U 1 1 5CDB1941
+P 6400 1550
+F 0 "H2" H 6500 1596 50  0000 L CNN
+F 1 "MountingHole" H 6500 1505 50  0000 L CNN
+F 2 "MountingHole:MountingHole_3mm" H 6400 1550 50  0001 C CNN
+F 3 "~" H 6400 1550 50  0001 C CNN
+	1    6400 1550
+	1    0    0    -1  
+$EndComp
+$Comp
+L Mechanical:MountingHole H3
+U 1 1 5CDB2830
+P 6750 1600
+F 0 "H3" H 6850 1646 50  0000 L CNN
+F 1 "MountingHole" H 6850 1555 50  0000 L CNN
+F 2 "MountingHole:MountingHole_3mm" H 6750 1600 50  0001 C CNN
+F 3 "~" H 6750 1600 50  0001 C CNN
+	1    6750 1600
+	1    0    0    -1  
+$EndComp
+$Comp
+L Mechanical:MountingHole H4
+U 1 1 5CDB367F
+P 7100 1650
+F 0 "H4" H 7200 1696 50  0000 L CNN
+F 1 "MountingHole" H 7200 1605 50  0000 L CNN
+F 2 "MountingHole:MountingHole_3mm" H 7100 1650 50  0001 C CNN
+F 3 "~" H 7100 1650 50  0001 C CNN
+	1    7100 1650
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector:Conn_01x04_Female J6
+U 1 1 5CD8BD3F
+P 8150 2400
+F 0 "J6" H 8178 2376 50  0000 L CNN
+F 1 "Conn_01x04_Female" H 8178 2285 50  0000 L CNN
+F 2 "Connector_PinSocket_2.54mm:PinSocket_1x04_P2.54mm_Vertical" H 8150 2400 50  0001 C CNN
+F 3 "~" H 8150 2400 50  0001 C CNN
+	1    8150 2400
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector:Conn_01x04_Female J7
+U 1 1 5CD8DB7C
+P 8450 2400
+F 0 "J7" H 8478 2376 50  0000 L CNN
+F 1 "Conn_01x04_Female" H 8478 2285 50  0000 L CNN
+F 2 "Connector_PinSocket_2.54mm:PinSocket_1x04_P2.54mm_Vertical" H 8450 2400 50  0001 C CNN
+F 3 "~" H 8450 2400 50  0001 C CNN
+	1    8450 2400
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	9200 3700 8900 3700
+	7950 2300 8250 2300
+Wire Wire Line
+	7950 2400 8250 2400
+Wire Wire Line
+	7950 2500 8250 2500
+Wire Wire Line
+	7950 2600 8250 2600
+$Comp
+L Connector_Generic:Conn_02x03_Counter_Clockwise J8
+U 1 1 5CD92320
+P 5000 4000
+F 0 "J8" V 5004 4180 50  0000 L CNN
+F 1 "Conn_02x03_Counter_Clockwise" V 5095 4180 50  0000 L CNN
+F 2 "Connector_PinSocket_2.54mm:PinSocket_2x03_P2.54mm_Vertical" H 5000 4000 50  0001 C CNN
+F 3 "~" H 5000 4000 50  0001 C CNN
+	1    5000 4000
+	0    1    1    0   
+$EndComp
 $EndSCHEMATC
