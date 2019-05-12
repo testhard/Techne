@@ -3,6 +3,7 @@
 #include "functions.h"
 #include "Adafruit_GFX.h"
 #include "Adafruit_ILI9341.h"
+#include "HX711.h"
 #define TFT_DC D4
 #define TFT_CS D8
 #define select 0x8981
@@ -10,7 +11,6 @@
 
 
 void setup() {
-  while (1) {
     Serial.begin(9600);
     SD.begin(D1);
     tft.begin();
@@ -19,8 +19,12 @@ void setup() {
     Serial.print(selected);
     Serial.print("0");
     delay(100);
-    ingredientList(selected);
-  }
+    if(ingredientList(selected)){
+      int quantity=initRecipe(selected);
+      if(quantity>0){
+        cook(selected, quantity);
+      }
+    }
 }
 
 
