@@ -1,4 +1,5 @@
 EESchema Schematic File Version 4
+LIBS:lcd board-cache
 EELAYER 29 0
 EELAYER END
 $Descr A4 11693 8268
@@ -155,13 +156,13 @@ Wire Wire Line
 $Comp
 L Connector_Generic:Conn_01x11 J1
 U 1 1 5CD8DC52
-P 5550 4800
-F 0 "J1" V 5675 4796 50  0000 C CNN
-F 1 "Conn_01x11" V 5766 4796 50  0000 C CNN
-F 2 "Connector_PinSocket_2.54mm:PinSocket_1x11_P2.54mm_Horizontal" H 5550 4800 50  0001 C CNN
-F 3 "~" H 5550 4800 50  0001 C CNN
-	1    5550 4800
-	0    1    1    0   
+P 5550 4400
+F 0 "J1" V 5675 4396 50  0000 C CNN
+F 1 "Conn_01x11" V 5766 4396 50  0000 C CNN
+F 2 "Connector_PinSocket_2.54mm:PinSocket_1x11_P2.54mm_Horizontal" H 5550 4400 50  0001 C CNN
+F 3 "~" H 5550 4400 50  0001 C CNN
+	1    5550 4400
+	0    -1   -1   0   
 $EndComp
 Wire Wire Line
 	4750 3050 4600 3050

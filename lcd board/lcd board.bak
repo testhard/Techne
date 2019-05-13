@@ -63,7 +63,7 @@ U 1 1 5CD87170
 P 8050 2550
 F 0 "R1" H 8120 2596 50  0000 L CNN
 F 1 "R" H 8120 2505 50  0000 L CNN
-F 2 "Resistor_THT:R_Axial_DIN0411_L9.9mm_D3.6mm_P15.24mm_Horizontal" V 7980 2550 50  0001 C CNN
+F 2 "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal" V 7980 2550 50  0001 C CNN
 F 3 "~" H 8050 2550 50  0001 C CNN
 	1    8050 2550
 	0    -1   -1   0   
@@ -74,7 +74,7 @@ U 1 1 5CD87E37
 P 8050 2650
 F 0 "R2" H 8120 2696 50  0000 L CNN
 F 1 "R" H 8120 2605 50  0000 L CNN
-F 2 "Resistor_THT:R_Axial_DIN0411_L9.9mm_D3.6mm_P15.24mm_Horizontal" V 7980 2650 50  0001 C CNN
+F 2 "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal" V 7980 2650 50  0001 C CNN
 F 3 "~" H 8050 2650 50  0001 C CNN
 	1    8050 2650
 	0    -1   -1   0   
@@ -85,7 +85,7 @@ U 1 1 5CD88176
 P 8050 2750
 F 0 "R3" H 8120 2796 50  0000 L CNN
 F 1 "R" H 8120 2705 50  0000 L CNN
-F 2 "Resistor_THT:R_Axial_DIN0411_L9.9mm_D3.6mm_P15.24mm_Horizontal" V 7980 2750 50  0001 C CNN
+F 2 "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal" V 7980 2750 50  0001 C CNN
 F 3 "~" H 8050 2750 50  0001 C CNN
 	1    8050 2750
 	0    -1   -1   0   
@@ -158,7 +158,7 @@ U 1 1 5CD8DC52
 P 5550 4800
 F 0 "J1" V 5675 4796 50  0000 C CNN
 F 1 "Conn_01x11" V 5766 4796 50  0000 C CNN
-F 2 "Connector_PinSocket_2.54mm:PinSocket_1x12_P2.54mm_Horizontal" H 5550 4800 50  0001 C CNN
+F 2 "Connector_PinSocket_2.54mm:PinSocket_1x11_P2.54mm_Horizontal" H 5550 4800 50  0001 C CNN
 F 3 "~" H 5550 4800 50  0001 C CNN
 	1    5550 4800
 	0    1    1    0   
