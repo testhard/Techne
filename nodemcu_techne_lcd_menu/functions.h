@@ -1,10 +1,12 @@
 #include "Adafruit_GFX.h"
 #include "Adafruit_ILI9341.h"
+#include "HX711.h"
 #define TFT_DC D4
 #define TFT_CS D8
 #define select 0x8981
 #define back 0x2144
 Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC);
+HX711 scale(D3, D2);
 File myFile;
 File receipt;
 
@@ -84,10 +86,15 @@ String recipeSelect() {
           counter--;
         }
         break;
+      case'X':
+        myFile.close();
+        return ("main");
       case'E':
         myFile.close();
         String selected = ricette[counter];
         return (selected);
+        break;
+
     }
     //cancello la selezione sopra
     if (counter > 0) {
@@ -165,11 +172,12 @@ bool ingredientList(String receiptName) {
     while (!Serial.available()) {
       //aspettiamo
     }
-    if (Serial.read() == 'E') {
+    char var = Serial.read();
+    if (var == 'E') {
       //va avanti
       return (true);
     }
-    if (Serial.read() == 'X') {
+    if (var == 'X') {
       //torna indietro
       return (false);
       break;
@@ -222,12 +230,119 @@ int initRecipe(String receiptName) {
     }
   }
 }
+
+bool initQuantity(int quantity, String receiptName) {
+
+  char lect1;
+  String number1;
+  int N1;
+  int counter = 0;
+  int sum = 0;
+
+  tft.fillScreen(back);
+  tft.setTextColor(0x0000);
+  tft.setTextSize(3);
+  tft.setCursor(10, 5);
+  tft.fillRect(0, 0, 320, 33, select);
+  tft.println(receiptName);
+  tft.setTextColor(ILI9341_WHITE);
+  tft.setCursor(5, 40);
+  tft.setTextSize(2);
+  tft.print("per ");
+  tft.print(quantity);
+  tft.print("g di");
+  tft.setCursor(5, 56);
+  tft.print(receiptName+":");
+  //apro il file main dalla sd
+  receipt = SD.open(receiptName + ".txt");
+  if (receipt) Serial.print("apre");
+  //leggo il numero di elementi (la prima riga del file contiene tale numero)
+  while (1) {
+    lect1 = receipt.read();
+    Serial.println(lect1);
+    if (lect1 == ';') {
+      break;
+    }
+    number1 += lect1;
+    Serial.println(number1);
+  }
+  N1 = number1.toInt();
+  //creao l'array per i nomi delle ricette
+  String ingredienti[N1];
+  for (int i = 0; i < N1; i++) {
+    char letter1;
+    while (1) {//riempio l'array
+      if (receipt.available()) {
+        letter1 = receipt.read();
+        if (letter1 != ';') {
+          ingredienti[i] += letter1;
+        }
+        else {
+          break;
+        }
+      }
+      else {
+        receipt.close();
+        break;
+      }
+    }
+  }
+  //lettura quantità
+  String quantitiesS[N1];
+  float quantities[N1];
+  for (int i = 0; i < N1; i++) {
+    char letter;
+    //riempio l'array
+    while (1) {
+      if (receipt.available()) {
+        letter = receipt.read();
+        if (letter != ';') {
+          quantitiesS[i] += letter;
+        }
+        else {
+          break;
+        }
+      }
+      else {
+        receipt.close();
+        break;
+      }
+    }
+  }
+  //trasformo le stringhe ascii delle quantità in numeri int e ne calcolo la somma
+  for (int i = 0; i < N1; i++) {
+    quantities[i] = quantitiesS[i].toInt();
+    sum += quantities[i];
+  }
+  //trasformo le quantità teoriche in reali
+  String Total[N1];
+  for (int i = 0; i < N1; i++) {
+    float total = quantities[i] * (quantity / sum);
+    Total[i] = String(total,0);
+  }
+  tft.setCursor(5, 56 + 18);
+  for (int i = 0; i < N1; i++) {
+    tft.print(ingredienti[i]);
+    tft.print(": ");
+    tft.print(Total[i]);
+    tft.print("g");
+    tft.setCursor(5, 56 + 18 * (i + 2));
+  }
+  while (!Serial.available()) {
+    char var = Serial.read();
+    if (var == 'E') return (true);
+    if (var == 'X') return (false);
+  }
+}
+
 void cook(String receiptName, int quantity) {
 
   char lect;
   String number;
   int N;
   float sum = 0;
+  int value = 0;
+  int oldValue = 99999999;
 
   tft.fillScreen(back);
   tft.setTextColor(0x0000);
@@ -302,6 +417,7 @@ void cook(String receiptName, int quantity) {
   }
   for (int i = 0; i < N; i++) {
     int total = int(quantities[i] * (quantity / sum));
+    tft.setTextSize(3);
     tft.print(ingredienti[i]);
     tft.print(": ");
     tft.print(total);
@@ -312,38 +428,39 @@ void cook(String receiptName, int quantity) {
           break;
         }
       }
-      /*da testare appena HX711 sostituitivo arriva
-       int peso=scale.get_units(5);
-       tft.fillRect(0,180,int(peso*320/total),60,select);
-       tft.fillRect(int(peso*320/total),180,320-int(peso*320/total),60,back);
-       tft.setTextSize(5);
-       tft.setCursor(10,190);
-       tft.print(peso);
-       tft.print("g");
-       int pos;
-       //posizionamento della scritta del peso
-       if (value < 10) pos = 60;
-       else {
-          if (value < 100) pos = 90;
+
+
+      //da testare appena HX711 sostituitivo arriva
+      int peso = scale.get_units(5);
+
+      int pos;
+      //posizionamento della scritta del peso
+      if (peso < 10) pos = 60;
+      else {
+        if (peso < 100) pos = 90;
+        else {
+          if (peso < 1000) pos = 120;
           else {
-           if (value < 1000) pos = 120;
-           else {
-            if (value < 10000) pos = 150;
+            if (peso < 10000) pos = 150;
             else {
               pos = 180;
+            }
           }
         }
       }
-    }
-    if (value != oldValue) {
-      tft.setCursor(160 - pos / 2, 190);
-      tft.fillRect(0, 200, 320, 240, select);
-      tft.print(value);
-      oldValue = value;
-      tft.print("g");
-    }
-       if (peso==total) break;
-       */
+      if (peso != oldValue) {
+        tft.fillRect(0, 180, int(peso * 320 / total), 60, select);
+        tft.fillRect(int(peso * 320 / total), 180, 320 - int(peso * 320 / total), 60, back);
+        tft.setTextSize(5);
+        tft.setCursor(160 - pos / 2, 190);
+        tft.print(peso);
+        oldValue = peso;
+        tft.print("g");
+      }
+      if (peso == total) break;
+
+
+
     }
     tft.fillRect(0, 40, 320, 24, back);
     tft.setCursor(5, 40);
@@ -351,7 +468,7 @@ void cook(String receiptName, int quantity) {
 
 
 }
-void main() {
+void Main() {
   int oldValue = 99999999999;
   tft.fillScreen(back);
   tft.setTextColor(0x0000);
@@ -365,9 +482,10 @@ void main() {
   scale.set_scale(400.f);
   scale.tare();
   while (1) {
-    if(Serial.available()){
-      if(Serial.read()=='E') break;
-      if(Serial.read()=='D') scale.tare();
+    if (Serial.available()) {
+      char var = Serial.read();
+      if (var == 'E') break;
+      if (var == 'D') scale.tare();
     }
     //lettura peso
     int value = scale.get_units(5);

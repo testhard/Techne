@@ -11,24 +11,25 @@
 
 
 void setup() {
-    Serial.begin(9600);
-    SD.begin(D1);
-    tft.begin();
-    tft.setRotation(1);
-    String selected=recipeSelect();
-    Serial.print(selected);
-    Serial.print("0");
-    delay(100);
-    if(ingredientList(selected)){
-      int quantity=initRecipe(selected);
-      if(quantity>0){
-        cook(selected, quantity);
-      }
-    }
+  Serial.begin(9600);
+  SD.begin(D1);
+  tft.begin();
+  tft.setRotation(1);
 }
 
 
 void loop() {
-
-
+  while(1){
+  Main();
+  String selected = recipeSelect();
+  if(selected=="main") break;
+  if (ingredientList(selected)) {
+    int quantity = initRecipe(selected);
+    if (quantity > 0) {
+      if(initQuantity(quantity, selected)){
+         cook(selected, quantity);
+      }
+    }
+  }
+  }
 }
