@@ -56,6 +56,9 @@ def genera():
             for i in range(len(quantita)):
                 file.write(str(int(quantita[i])*(1/somma))+";")
             file.close()
+        nomi=[]
+        quantita=[]
+        somma=0
     else:
         print("noName")
 
