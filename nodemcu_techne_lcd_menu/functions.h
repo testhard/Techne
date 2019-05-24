@@ -13,7 +13,8 @@ File receipt;
 
 
 String recipeSelect() {
-  String main = "main.txt";
+  int page = 0;
+  String main = "main.lt";
   char lect;
   String number;
   int N;
@@ -106,11 +107,13 @@ String recipeSelect() {
     if (counter < N - 1) {
       tft.fillRect(0, 40 + 18 * (counter + 1), 320, 14, back);
       tft.setCursor(5, 40 + 18 * (counter + 1));
+      Serial.println(ricette[counter + 1 + 10 * page]);
       tft.println(ricette[counter + 1]);
     }
     //scrivo la selezione selezionata
     tft.fillRect(0, 40 + 18 * (counter), 320, 14, select);
     tft.setCursor(5, 40 + 18 * (counter));
+    Serial.println(ricette[counter + 10 * page]);
     tft.println(ricette[counter]);
     //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
   }
@@ -252,10 +255,11 @@ bool initQuantity(int quantity, String receiptName) {
   tft.print(quantity);
   tft.print("g di");
   tft.setCursor(5, 56);
-  tft.print(receiptName+":");
+  tft.print(receiptName + ":");
   //apro il file main dalla sd
   receipt = SD.open(receiptName + ".txt");
   if (receipt) Serial.print("apre");
+  delay(100);
   //leggo il numero di elementi (la prima riga del file contiene tale numero)
   while (1) {
     lect1 = receipt.read();
@@ -311,14 +315,13 @@ bool initQuantity(int quantity, String receiptName) {
   }
   //trasformo le stringhe ascii delle quantità in numeri int e ne calcolo la somma
   for (int i = 0; i < N1; i++) {
-    quantities[i] = quantitiesS[i].toInt();
-    sum += quantities[i];
+    quantities[i] = quantitiesS[i].toFloat();
   }
   //trasformo le quantità teoriche in reali
   String Total[N1];
   for (int i = 0; i < N1; i++) {
-    float total = quantities[i] * (quantity / sum);
-    Total[i] = String(total,0);
+    float total = quantities[i] * quantity;
+    Total[i] = String(total, 0);
   }
   tft.setCursor(5, 56 + 18);
   for (int i = 0; i < N1; i++) {
@@ -412,11 +415,11 @@ void cook(String receiptName, int quantity) {
   }
   //trasformo le stringhe ascii delle quantità in numeri int e ne calcolo la somma
   for (int i = 0; i < N; i++) {
-    quantities[i] = quantitiesS[i].toInt();
-    sum += quantities[i];
+    quantities[i] = quantitiesS[i].toFloat();
   }
   for (int i = 0; i < N; i++) {
-    int total = int(quantities[i] * (quantity / sum));
+    scale.tare();
+    int total = int(quantities[i] * quantity);
     tft.setTextSize(3);
     tft.print(ingredienti[i]);
     tft.print(": ");
@@ -457,7 +460,7 @@ void cook(String receiptName, int quantity) {
         oldValue = peso;
         tft.print("g");
       }
-      if (peso == total) break;
+      if (((peso > total - total * 0.05) && (peso < total + total * 0.05 )) || ((peso > total - 2) && (peso < totaL + 2)) ) break;
 
 
 
