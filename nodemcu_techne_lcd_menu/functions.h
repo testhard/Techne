@@ -43,6 +43,7 @@ String recipeSelect() {
   }
   N = number.toInt();
   String ricette[N];//creao l'array per i nomi delle ricette
+  String Ricette[N];
   for (int i = 0; i < N; i++) {
     char letter;
     while (1) {//riempio l'array
@@ -50,6 +51,7 @@ String recipeSelect() {
         letter = myFile.read();
         if (letter != ';') {
           ricette[i] += letter;
+          Ricette[i] += letter;
         }
         else {
           break;
@@ -60,6 +62,7 @@ String recipeSelect() {
         break;
       }
     }
+    if (ricette[i].length() > 25) ricette[i].remove(25, ricette[i].length() - 25);
     tft.print(ricette[i]);//stampo sul tft le ricette
     tft.setCursor(5, 40 + 18 * (i + 1));
   }
@@ -92,59 +95,80 @@ String recipeSelect() {
         return ("main");
       case'E':
         myFile.close();
-        String selected = ricette[counter];
+        String selected = Ricette[counter];
         return (selected);
         break;
 
     }
+    if (N > 10) {
+      if (counter - 10 * page > 10) {
+        page++;
+        tft.setCursor(5, 40);
+        tft.fillRect(0, 40, 320, 240, back);
+        for (int i = page * 10; i < N; i++) {
+          tft.print(ricette[i]);
+          tft.setCursor(5, 40 + 18 * (i - 9));
+        }
+      }
+    }
+    if (counter - 10 * page < 0) {
+      page--;
+      tft.setCursor(5, 40);
+      tft.fillRect(0, 40, 320, 240, back);
+      for (int i = page * 10; i < N; i++) {
+        tft.print(ricette[i]);
+        tft.setCursor(5, 40 + 18 * (i + 1 - 10 * page));
+      }
+    }
     //cancello la selezione sopra
-    if (counter > 0) {
-      tft.fillRect(0, 40 + 18 * (counter - 1), 320, 14, back);
-      tft.setCursor(5, 40 + 18 * (counter - 1));
+    if (counter - 10 * page > 0) {
+      tft.fillRect(0, 40 + 18 * (counter - 10 * page - 1), 320, 14, back);
+      tft.setCursor(5, 40 + 18 * (counter - 10 * page - 1));
       tft.println(ricette[counter - 1]);
     }
     //cancello la selezione sotto
     if (counter < N - 1) {
-      tft.fillRect(0, 40 + 18 * (counter + 1), 320, 14, back);
-      tft.setCursor(5, 40 + 18 * (counter + 1));
-      Serial.println(ricette[counter + 1 + 10 * page]);
+      tft.fillRect(0, 40 + 18 * (counter - 10 * page + 1), 320, 14, back);
+      tft.setCursor(5, 40 + 18 * (counter - 10 * page + 1));
       tft.println(ricette[counter + 1]);
     }
     //scrivo la selezione selezionata
-    tft.fillRect(0, 40 + 18 * (counter), 320, 14, select);
-    tft.setCursor(5, 40 + 18 * (counter));
-    Serial.println(ricette[counter + 10 * page]);
+    tft.fillRect(0, 40 + 18 * (counter - 10 * page), 320, 14, select);
+    tft.setCursor(5, 40 + 18 * (counter - 10 * page));
     tft.println(ricette[counter]);
     //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
   }
 }
+
 bool ingredientList(String receiptName) {
   char lect1;
   String number1;
   int N1;
   int counter = 0;
+  int page=0;  
+  
+  //apro il file main dalla sd
+  receipt = SD.open(receiptName + ".txt");
+  
   tft.fillScreen(back);
   tft.setTextColor(0x0000);
   tft.setTextSize(3);
   tft.setCursor(10, 5);
   tft.fillRect(0, 0, 320, 33, select);
+  if (receiptName.length() > 17) receiptName.remove(17, receiptName.length() - 17);
   tft.println(receiptName);
   tft.setTextColor(ILI9341_WHITE);
   tft.setCursor(5, 40);
   tft.setTextSize(2);
   myFile.close();
-  //apro il file main dalla sd
-  receipt = SD.open(receiptName + ".txt");
-  if (receipt) Serial.print("apre");
+
   //leggo il numero di elementi (la prima riga del file contiene tale numero)
   while (1) {
     lect1 = receipt.read();
-    Serial.println(lect1);
     if (lect1 == ';') {
       break;
     }
     number1 += lect1;
-    Serial.println(number1);
   }
   N1 = number1.toInt();
   //creao l'array per i nomi delle ricette
@@ -167,6 +191,7 @@ bool ingredientList(String receiptName) {
       }
     }
     //stampo sul tft gli ingredienti
+    if (ingredienti[i].length() > 25) ingredienti[i].remove(25, ingredienti[i].length() - 25);
     tft.print(ingredienti[i]);
     tft.setCursor(5, 40 + 18 * (i + 1));
   }
@@ -185,6 +210,14 @@ bool ingredientList(String receiptName) {
       return (false);
       break;
     }
+    if ((var == 'D') && (page < int(N1 / 12))) page++;
+    if ((var == 'U') && (page >0)) page--;
+    tft.fillRect(0, 40, 320, 240, back);
+    tft.setCursor(5, 40);
+    for (int i = 11 * page; i < N1 ; i++) {
+      tft.print(ingredienti[i]);
+      tft.setCursor(5, 40 + 18 * (i + 1-11*page));
+    }
   }
 }
 
@@ -196,6 +229,7 @@ int initRecipe(String receiptName) {
   tft.setTextSize(3);
   tft.setCursor(10, 5);
   tft.fillRect(0, 0, 320, 33, select);
+  if (receiptName.length() > 17) receiptName.remove(17, receiptName.length() - 17);
   tft.println(receiptName);
   tft.setTextColor(ILI9341_WHITE);
   tft.setCursor(5, 40);
@@ -241,12 +275,17 @@ bool initQuantity(int quantity, String receiptName) {
   int N1;
   int counter = 0;
   int sum = 0;
-
+  int page = 0;
+  
+  //apro il file main dalla sd
+  receipt = SD.open(receiptName + ".txt");
+  
   tft.fillScreen(back);
   tft.setTextColor(0x0000);
   tft.setTextSize(3);
   tft.setCursor(10, 5);
   tft.fillRect(0, 0, 320, 33, select);
+  if (receiptName.length() > 17) receiptName.remove(17, receiptName.length() - 17);
   tft.println(receiptName);
   tft.setTextColor(ILI9341_WHITE);
   tft.setCursor(5, 40);
@@ -254,21 +293,16 @@ bool initQuantity(int quantity, String receiptName) {
   tft.print("per ");
   tft.print(quantity);
   tft.print("g di");
-  tft.setCursor(5, 56);
+  tft.setCursor(5, 57);
   tft.print(receiptName + ":");
-  //apro il file main dalla sd
-  receipt = SD.open(receiptName + ".txt");
-  if (receipt) Serial.print("apre");
-  delay(100);
+  
   //leggo il numero di elementi (la prima riga del file contiene tale numero)
   while (1) {
     lect1 = receipt.read();
-    Serial.println(lect1);
     if (lect1 == ';') {
       break;
     }
     number1 += lect1;
-    Serial.println(number1);
   }
   N1 = number1.toInt();
   //creao l'array per i nomi delle ricette
@@ -290,6 +324,7 @@ bool initQuantity(int quantity, String receiptName) {
         break;
       }
     }
+    if (ingredienti[i].length() > 18) ingredienti[i].remove(18, ingredienti[i].length() - 18);
   }
   //lettura quantità
   String quantitiesS[N1];
@@ -321,22 +356,44 @@ bool initQuantity(int quantity, String receiptName) {
   String Total[N1];
   for (int i = 0; i < N1; i++) {
     float total = quantities[i] * quantity;
-    Total[i] = String(total, 0);
+    Total[i] = String(total,0);
   }
   tft.setCursor(5, 56 + 18);
   for (int i = 0; i < N1; i++) {
     tft.print(ingredienti[i]);
-    tft.print(": ");
-    tft.print(Total[i]);
-    tft.print("g");
+    tft.print(":");
     tft.setCursor(5, 56 + 18 * (i + 2));
   }
-  while (!Serial.available()) {
+  tft.setCursor(245, 56 + 18);
+  for (int i = 0; i < N1; i++) {
+    tft.print(Total[i]);
+    tft.print("g");
+    tft.setCursor(245, 56 + 18 * (i + 2));
+  }
+  while (1) {
+    while (!Serial.available()) {
+    }
     char var = Serial.read();
     if (var == 'E') return (true);
     if (var == 'X') return (false);
+    if ((var == 'D') && (page < int(N1 / 10))) page++;
+    if ((var == 'U') && (page >0)) page--;
+    tft.fillRect(0, 56 + 18, 320, 240, back);
+    tft.setCursor(5, 56 + 18);
+    for (int i = 9 * page; i < N1 ; i++) {
+      tft.print(ingredienti[i]);
+      tft.print(":");
+      tft.setCursor(5, 56 + 18 * (i + 2-9*page));
+    }
+    tft.setCursor(245, 56 + 18);
+    for (int i = 9 * page; i < N1 ; i++) {
+      tft.print(Total[i]);
+      tft.print("g");
+      tft.setCursor(245, 56 + 18 * (i + 2-9*page));
+    }
   }
 }
+
 
 void cook(String receiptName, int quantity) {
 
@@ -346,29 +403,28 @@ void cook(String receiptName, int quantity) {
   float sum = 0;
   int value = 0;
   int oldValue = 99999999;
-
+  
+  //apro la ricetta
+  receipt = SD.open(receiptName + ".txt");
+  
   tft.fillScreen(back);
   tft.setTextColor(0x0000);
   tft.setTextSize(3);
   tft.setCursor(10, 5);
   tft.fillRect(0, 0, 320, 33, select);
+  if (receiptName.length() > 18) receiptName.remove(18, receiptName.length() - 18);
   tft.println(receiptName);
   tft.setTextColor(ILI9341_WHITE);
   tft.setCursor(5, 40);
-  tft.setTextSize(3);
+  tft.setTextSize(2);
 
-  //apro la ricetta
-  receipt = SD.open(receiptName + ".txt");
-  if (receipt) Serial.print("apre");
   //leggo il numero di elementi (la prima riga del file contiene tale numero)
   while (1) {
     lect = receipt.read();
-    Serial.println(lect);
     if (lect == ';') {
       break;
     }
     number += lect;
-    Serial.println(number);
   }
   N = number.toInt();
   //creao l'array per i nomi delle ricette
@@ -390,6 +446,7 @@ void cook(String receiptName, int quantity) {
         break;
       }
     }
+    if (ingredienti[i].length() > 24) ingredienti[i].remove(24, ingredienti[i].length() - 24);
   }
   //leggo le quantità
   String quantitiesS[N];
@@ -419,11 +476,13 @@ void cook(String receiptName, int quantity) {
   }
   for (int i = 0; i < N; i++) {
     scale.tare();
-    int total = int(quantities[i] * quantity);
-    tft.setTextSize(3);
+    float total = quantities[i] * quantity;
+    String Total = String(total,0);
+    tft.setTextSize(2);
     tft.print(ingredienti[i]);
     tft.print(": ");
-    tft.print(total);
+    tft.setCursor(5, 57);
+    tft.print(Total);
     tft.print("g");
     while (1) {
       if (Serial.available()) {
@@ -460,15 +519,19 @@ void cook(String receiptName, int quantity) {
         oldValue = peso;
         tft.print("g");
       }
-      if (((peso > total - total * 0.05) && (peso < total + total * 0.05 )) || ((peso > total - 2) && (peso < totaL + 2)) ) break;
+      if (((peso > total - total * 0.05) && (peso < total + total * 0.05 )) || ((peso > total - 2) && (peso < total + 2)&&(peso>5)) ) break;
 
 
 
     }
-    tft.fillRect(0, 40, 320, 24, back);
+    tft.fillRect(0, 40, 320, 40, back);
     tft.setCursor(5, 40);
   }
-
+  tft.fillRect(0,0,320,240, select);
+  tft.setTextSize(6);
+  tft.setCursor(88,99);
+  tft.print("FINE");
+  delay(2000);
 
 }
 void Main() {
